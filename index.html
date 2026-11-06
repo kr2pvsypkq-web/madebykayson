@@ -145,16 +145,16 @@ button:disabled {
           }
         }
         w.close();
-        setStatus("done");
+        setStatus("done — madebykayson");
         btn.disabled = false;
       }
 
       async function main() {
-        setStatus("detecting…");
+        setStatus("checking…");
 
         let ext_detected = await detect_ext();
         if (!ext_detected) {
-          setStatus("securly not found", true);
+          setStatus("not found", true);
           return;
         }
 

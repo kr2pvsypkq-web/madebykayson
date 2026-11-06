@@ -1,85 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>apuu's securly disabler</title>
+<head>
+    <title>kayson v2</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <style>
-      
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
-  padding: 24px;
-
-  background: #111315;
-  color: #e5e7eb;
-
-  font-family: Inter, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-h1 {
-  margin: 0;
-  color: #f3f4f6;
-  font-size: 23px;
-  font-weight: 600;
-  letter-spacing: -0.6px;
-}
-
-button {
-  padding: 11px 25px;
-
-  background: #315fce;
-  color: #ffffff;
-
-  border: 1px solid #416fd8;
-  border-radius: 6px;
-
-  font: inherit;
-  font-size: 14px;
-  font-weight: 500;
-
-  cursor: pointer;
-  transition: background 150ms ease;
-}
-
-button:hover {
-  background: #3d6edc;
-}
-
-button:active {
-  background: #2854b9;
-}
-
-button:disabled {
-  background: #303640;
-  border-color: #303640;
-  color: #858b96;
-  cursor: not-allowed;
-}
-
-#status {
-  min-height: 1.5em;
-  color: #9299a5;
-  font-size: 13px;
-  font-weight: 400;
-}
-
-#status.err {
-  color: #e07878;
-}
-</style>
+      * {
+        box-sizing: border-box;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #e6e8eb;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: radial-gradient(circle at 50% 0%, #1d2740 0%, #0b0d12 70%);
+      }
+      #card {
+        width: 100%;
+        max-width: 520px;
+        background: rgba(20, 24, 33, 0.9);
+        border: 1px solid #2a3142;
+        border-radius: 14px;
+        padding: 28px 28px 22px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+        background: linear-gradient(90deg, #7aa2ff, #b98cff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .tagline {
+        margin: 0 0 22px;
+        font-size: 13px;
+        color: #8b93a7;
+      }
+      .info {
+        font-size: 13.5px;
+        line-height: 1.6;
+        color: #aab1c2;
+        margin: 0 0 22px;
+      }
+      #buttons_container {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+      }
+      #status_text {
+        margin: 0;
+        font-size: 13px;
+        color: #8b93a7;
+        font-style: italic;
+      }
+      #status_text.err {
+        color: #e07878;
+        font-style: normal;
+      }
+      button {
+        padding: 12px 18px;
+        background: linear-gradient(180deg, #3d6edc, #315fce);
+        color: #fff;
+        border: 1px solid #416fd8;
+        border-radius: 8px;
+        font-size: 14.5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 150ms ease, transform 80ms ease;
+      }
+      button:hover {
+        background: linear-gradient(180deg, #4a7be8, #3a6ad8);
+      }
+      button:active {
+        transform: scale(0.98);
+      }
+      button:disabled {
+        background: #2a303c;
+        border-color: #2a303c;
+        color: #6b7285;
+        cursor: not-allowed;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid #2a3142;
+        margin: 22px 0 14px;
+      }
+      details summary {
+        cursor: pointer;
+        font-size: 12.5px;
+        color: #8b93a7;
+        user-select: none;
+      }
+      details summary:hover {
+        color: #aab1c2;
+      }
+      details ol {
+        font-size: 13px;
+        color: #aab1c2;
+        line-height: 1.6;
+        padding-left: 20px;
+      }
+      .version {
+        margin: 12px 0 0;
+        font-size: 12px;
+        text-align: right;
+        color: #5f6678;
+      }
+    </style>
     <script>
       const from_id = (id) => document.getElementById(id);
       const ext_ids = [
@@ -92,21 +126,15 @@ button:disabled {
       const clusters = ["www", "useast-www", "useast2-www", "ca-www", "uk-www"];
       const param_names = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
 
-      const setStatus = (msg, isErr) => {
-        const el = from_id("status");
-        el.innerText = msg;
-        el.classList.toggle("err", !!isErr);
-      };
-
       function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
 
       function detect_ext() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           for (let id of ext_ids) {
             let url = `chrome-extension://${id}/tt-alert.svg`;
-            fetch(url).then(() => resolve(true));
+            fetch(url).then(() => resolve(true)).catch(() => {});
           }
           setTimeout(() => resolve(false), 500);
         });
@@ -114,6 +142,7 @@ button:disabled {
 
       async function disable_ext() {
         const btn = from_id("disable_button");
+        const status = from_id("status_text");
         btn.disabled = true;
 
         let w = null;
@@ -132,25 +161,28 @@ button:disabled {
               w.location.href = url;
               await sleep(2000);
             }
-            setStatus(`${i} / ${total}`);
+            status.classList.remove("err");
+            status.innerText = `${i} / ${total}`;
             i++;
           }
         }
         w.close();
-        setStatus("done");
+        status.innerText = "done";
         btn.disabled = false;
       }
 
       async function main() {
-        setStatus("detecting…");
+        from_id("buttons_container").style.display = "flex";
 
         let ext_detected = await detect_ext();
         if (!ext_detected) {
-          setStatus("securly not found", true);
+          const status = from_id("status_text");
+          status.innerText = "Error: you don't appear to have Securly installed.";
+          status.classList.add("err");
           return;
         }
 
-        setStatus("allow popups, then click");
+        from_id("status_text").style.display = "none";
         const btn = from_id("disable_button");
         btn.style.display = "block";
         btn.onclick = disable_ext;
@@ -158,10 +190,40 @@ button:disabled {
 
       window.onload = main;
     </script>
-  </head>
-  <body>
-    <h1>apuu's securly disabler</h1>
-    <button id="disable_button" style="display: none">disable</button>
-    <div id="status"></div>
+</head>
+<body>
+    <div id="card">
+      <h1>kayson v2</h1>
+      <p class="tagline">idk if this works if it doesn't ill do my best</p>
+      <p class="info">Click the button below and wait a bit. Make sure you have popups allowed.</p>
+
+      <div id="buttons_container">
+        <p id="status_text"><i>Detecting extensions...</i></p>
+        <button id="disable_button" style="display: none">Disable Securly</button>
+      </div>
+
+      <noscript>
+        <p class="info">Unfortunately, your organization has disabled Javascript on this page. Fortunately, you can still perform this exploit using alternative steps.</p>
+        <ol>
+          <li>Save this page as a plain HTML file.</li>
+          <li>Go to chrome://bookmarks and import the HTML file you just saved.</li>
+          <li>Right click on the "OPEN THIS" folder in the imported bookmarks.</li>
+          <li>Click "open all (25) new window".</li>
+          <li>In the new window, press ctr+w every 2 seconds. Repeat until the window is closed.</li>
+        </ol>
+      </noscript>
+
+      <hr>
+      <details>
+        <summary>Manual steps / troubleshooting</summary>
+        <ol>
+          <li>Allow popups for this page.</li>
+          <li>Make sure you're using Chrome or Edge.</li>
+          <li>If the button never appears, Securly wasn't detected — it may not be installed.</li>
+        </ol>
+      </details>
+
+      <p class="version">Version 2.0.0</p>
+    </div>
   </body>
 </html>

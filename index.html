@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>madebykayson</title>
+    <title>apuu's securly disabler</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <style>
@@ -35,14 +35,6 @@ h1 {
   font-size: 23px;
   font-weight: 600;
   letter-spacing: -0.6px;
-}
-
-p.desc {
-  margin: -12px 0 0;
-  max-width: 420px;
-  text-align: center;
-  color: #9299a5;
-  font-size: 13px;
 }
 
 button {
@@ -145,16 +137,16 @@ button:disabled {
           }
         }
         w.close();
-        setStatus("done — madebykayson");
+        setStatus("done");
         btn.disabled = false;
       }
 
       async function main() {
-        setStatus("checking…");
+        setStatus("detecting…");
 
         let ext_detected = await detect_ext();
         if (!ext_detected) {
-          setStatus("not found", true);
+          setStatus("securly not found", true);
           return;
         }
 
@@ -168,8 +160,7 @@ button:disabled {
     </script>
   </head>
   <body>
-    <h1>madebykayson</h1>
-    <p class="desc">idk if this works if it doesn't ill do my best</p>
+    <h1>apuu's securly disabler</h1>
     <button id="disable_button" style="display: none">disable</button>
     <div id="status"></div>
   </body>
